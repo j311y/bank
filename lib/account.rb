@@ -4,6 +4,7 @@ class Account
   def initialize(balance = MAXIMUM_OVERDRAFT)
     @balance = balance
     @transactions = []
+    load_transactions
   end
 
   def deposit(amount)
@@ -22,14 +23,9 @@ class Account
   end
 
   def statement
-    header
     transactions_formatter(@transactions.reverse)
   end
 
-  def load
-    load_transactions
-  end
-  
   private
 
   attr_writer :balance, :transactions
@@ -42,17 +38,13 @@ class Account
     self.balance -= amount
   end
 
-  def header
-    puts "Account Statement at #{Time.now.strftime('%T on %a %e %b %Y')} \n"
-  end
-
   def transactions_handler(date, credit, debit, balance)
     transactions << { date: date, credit: credit, debit: debit, balance: balance }
   end
 
   def transactions_formatter(transactions)
     index = 0
-    puts "DATE || CREDIT || DEBIT || BALANCE"
+    puts 'DATE || CREDIT || DEBIT || BALANCE'
     until index == transactions.count
       puts "#{transactions[index][:date]} || #{transactions[index][:credit]} || #{transactions[index][:debit]} || #{transactions[index][:balance]}"
       index += 1
@@ -64,7 +56,7 @@ class Account
     CSV.open('transactions.csv', 'w') { |csv|
       @transactions.each do |transaction|
         transaction_data = []
-        transaction.each_value {|x| transaction_data << x }
+        transaction.each_value { |x| transaction_data << x }
         csv << transaction_data
       end
     }

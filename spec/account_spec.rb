@@ -42,19 +42,19 @@ describe Account do
     before(:each) do
       account.deposit(100)
     end
-    it 'records the date of the transaction (deposits)' do
+    it 'records the date of the transaction' do
       date = Time.now.strftime('%D')
-      expect(account.transactions[0]).to include(date: date)
+      expect(account.transactions[-1]).to include(date: date)
     end
     it 'records the ammount deposited' do
-      expect(account.transactions[0]).to include(credit: 100)
+      expect(account.transactions[-1]).to include(credit: 100)
     end
     it 'records the amount withdrawn' do
       account.withdraw(50)
-      expect(account.transactions[1]).to include(debit: 50)
+      expect(account.transactions[-1]).to include(debit: 50)
     end
     it 'records the balance at that time' do
-      expect(account.transactions[0]).to include(balance: 100)
+      expect(account.transactions[-1]).to include(balance: 100)
     end
   end
 end
